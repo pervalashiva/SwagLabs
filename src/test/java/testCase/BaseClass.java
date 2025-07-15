@@ -6,6 +6,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,15 +17,27 @@ public class BaseClass {
     public WebDriver driver;
 
     @BeforeClass
-    public void setup() {
+    public void setup() throws Exception {
+        Path tempProfile = Files.createTempDirectory("chrome-profile");
+
         ChromeOptions options = new ChromeOptions();
 
-        // Disable all password-related popups and warnings
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("credentials_enable_service", false);
         prefs.put("profile.password_manager_enabled", false);
-        prefs.put("profile.password_manager_leak_detection.enabled", false);  // 🔑 disables "password breach" warning
+        prefs.put("profile.password_manager_leak_detection.enabled", false);
+        prefs.put("password_manager_enabled", false);
+
         options.setExperimentalOption("prefs", prefs);
+
+        options.addArguments(
+            "--disable-blink-features=PasswordLeakDetection",
+            "--disable-features=PasswordLeakDetection",
+            "--disable-password-manager-reauthentication",
+            "--disable-save-password-bubble",
+            "--user-data-dir=" + tempProfile.toAbsolutePath().toString(),
+            "--incognito"
+        );
 
         driver = new ChromeDriver(options);
         driver.manage().deleteAllCookies();
@@ -34,6 +48,8 @@ public class BaseClass {
 
     @AfterClass
     public void tearDown() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

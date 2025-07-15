@@ -21,8 +21,22 @@ public class AddCartPage extends BasePage{
 	WebElement add3;
 
 	@FindBy(xpath = "//*[name()='path'][@fill='currentColor'][1]")
-	
 	WebElement cart;
+	
+	@FindBy(xpath = "//a[normalize-space()='CHECKOUT']")
+	WebElement checkout;
+
+	@FindBy(xpath = "//input[@id='first-name']")
+	WebElement fname;
+
+	@FindBy(xpath = "//input[@id='last-name']")
+	WebElement lname;
+
+	@FindBy(xpath = "//input[@id='postal-code']")
+	WebElement postCode;
+
+	@FindBy(xpath = "//input[@value='CONTINUE']")
+	WebElement continu;
 
 
 
@@ -45,6 +59,26 @@ public class AddCartPage extends BasePage{
 	public void cart()
 	{
 		cart.click();
+	}
+	public void checkout()
+	{
+		checkout.click();
+	}
+	public void fname(String firrstname)
+	{
+		fname.sendKeys(firrstname);
+	}
+	public void lname(String lastName)
+	{
+		lname.sendKeys(lastName);
+	}
+	public void postCode(String postCod)
+	{
+		postCode.sendKeys(postCod);
+	}
+	public void continu()
+	{
+		continu.click();
 	}
 
 }
